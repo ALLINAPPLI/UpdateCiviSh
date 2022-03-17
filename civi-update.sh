@@ -19,6 +19,7 @@ if [ ! -f ~/.bashrc ]; then
     exit 1
 fi
 
+#add functions file
 source functions.sh
 
 source ~/.bashrc
@@ -26,18 +27,33 @@ echo -e '\e[93m=============================================\033[0m'
 echo "Choisissez l'instance que vous souhaitez mettre à jour ?"
 echo "Liste des domaines disponibles : "
 echo " "
-plesk bin site --list
+listSite=$(plesk bin site --list);
+echo ${listSite[@]}
 echo " "
 read civi_folder
 echo -e '\e[93m=============================================\033[0m'
 
 echo -e '\e[93m=============================================\033[0m'
+echo "Choisissez la langue dans laquel doit etre civicrm ?"
+echo " "
+listLanguage=(
+"af_ZA" "da_DK" "en_CA" "fa_IR" "hi_IN" "ja_JP" "mk_MK" "pt_BR" "sl_SI" "uk_UA"
+"r_EG" "de_CH" "en_GB" "fi_FI" "hu_HU" "km_KH" "nb_NO" "pt_PT" "sq_AL" "vi_VN"
+"g_BG" "de_DE" "es_ES" "fr_CA" "hy_AM" "ko_KR" "nl_BE" "ro_RO" "sr_RS" "zh_CN"
+"a_ES" "el_GR" "es_MX" "fr_FR" "id_ID" "lt_LT" "nl_NL" "ru_RU" "sv_SE" "zh_TW"
+"s_CZ" "en_AU" "et_EE" "he_IL" "it_IT" "lv_LV" "pl_PL" "sk_SK" "tr_TR")
+echo ""
+echo ${listLanguage[@]}
+read civi_language
+echo -e '\e[93m=============================================\033[0m'
+
+echo -e '\e[93m=============================================\033[0m'
 echo "Choisissez la version que vous souhaitez installer (X.YY.Z)  ?"
 echo ""
-arrayCiviVersion=("5.41" "5.42" "5.43" "5.44" "5.45" "5.46" "5.47")
-echo ${arrayCiviVersion[@]}
+CiviVersion=("5.44" "5.45" "5.46" "5.47")
+echo ${CiviVersion[@]}
 read civi_version
-
+echo -e '\e[93m=============================================\033[0m'
 
 if [[ $civi_version =~ ^[0-9]*.[0-9]*.[0-9]*$ ]]
 then
@@ -50,7 +66,8 @@ then
     if [[ `wget -S --spider https://download.civicrm.org/civicrm-$civi_version-drupal.tar.gz  2>&1 | grep 'HTTP/1.1 200 OK'` ]]
     then
         #functions updateCivirm
-        updateCivicrm
+        #echo "test"
+        updateCivicrm civi_language
     else
         echo -e '\e[93m=======================================\033[0m'
         echo -e '\e[93m\033[31m Aucune version de Civicrm trouvé\033[31m'
@@ -59,7 +76,7 @@ then
     fi
 else
     echo -e '\e[93m=======================================\033[0m'
-    echo -e '\e[93m\033[31m Ce nest pas un nombre\033[31m'
+    echo -e '\e[93m\033[31m Ce n est pas un nombre\033[31m'
     echo -e '\e[93m=======================================\033[0m'
     exit 1
 fi

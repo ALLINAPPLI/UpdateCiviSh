@@ -1,7 +1,10 @@
 #!/bin/bash
 
-
+#function Update Civicrm
 updateCivicrm(){
+
+    echo $civi_language
+
     wget https://download.civicrm.org/civicrm-$civi_version-drupal.tar.gz
 
     # DL l10n
@@ -36,9 +39,9 @@ updateCivicrm(){
     #copy l10n content to the civicrm folder
     cp -R civicrm/l10n civicrm/l10n
     for l10nFile in civicrm/l10n/*; do
-        if [[ "$l10nFile" = "civicrm/l10n/fr_FR" ]]
+        if [[ "$l10nFile" = "civicrm/l10n/$civi_language" ]]
         then
-            echo " "
+            echo ""
         else
             rm -rf $l10nFile
         fi
@@ -46,8 +49,8 @@ updateCivicrm(){
 
     cp -R civicrm/sql/* langueMysql/
     for sqlFile in langueMysql/*; do
-        if [[ "$sqlFile" = "langueMysql/civicrm_data.fr_FR.mysql" ||
-            "$sqlFile" = "langueMysql/civicrm_acl.fr_FR.mysql" ||
+        if [[ "$sqlFile" = "langueMysql/civicrm_data.$civi_language.mysql" ||
+            "$sqlFile" = "langueMysql/civicrm_acl.$civi_language.mysql" ||
             "$sqlFile" = "langueMysql/civicrm_sample_custom_data.mysql" ||
             "$sqlFile" = "langueMysql/civicrm_sample.mysql" ||
             "$sqlFile" = "langueMysql/civicrm_queue_item.mysql" ||
@@ -73,7 +76,7 @@ updateCivicrm(){
     rm -rf civicrm/sql/*
     cp -R langueMysql/* civicrm/sql/
 
-    cv api Setting.create lcMessages="fr_FR"
+    cv api Setting.create lcMessages="$civi_language"
 
     rm -rf langueMysql/
     rm -rf civicrm-$civi_version-drupal.tar.gz
@@ -93,6 +96,8 @@ updateCivicrm(){
 
     # clear drupal cache
     drush cache-clear all
+
+    plesk repair all -y
 
     echo -e '\e[93m=============================================\033[0m'
     echo -e '\e[93m' $civi_name '\e[92m -> \033[32m UPGRADE END !\033[0m'
