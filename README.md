@@ -1,5 +1,3 @@
 # UpdateCiviSh
 
-Script permettant de mettre a jour civicrm 
-
-Update CIVI on Drupal , Plesk 
+Script permettant de mettre a jour civicrm sur Drupal ou Wordpress 

@@ -21,8 +21,9 @@ fi
 
 #add functions file
 source functions.sh
-
 source ~/.bashrc
+
+
 echo -e '\e[93m=============================================\033[0m'
 echo "Choisissez l'instance que vous souhaitez mettre à jour ?"
 echo "Liste des domaines disponibles : "
@@ -55,22 +56,28 @@ echo ${CiviVersion[@]}
 read civi_version
 echo -e '\e[93m=============================================\033[0m'
 
+echo -e '\e[93m=============================================\033[0m'
+echo "Wordpress ou Drupal ?"
+echo " "
+read civicrm_version
+echo -e '\e[93m=============================================\033[0m'
+
+
 if [[ $civi_version =~ ^[0-9]*.[0-9]*.[0-9]*$ ]]
 then
-    cd $civi_folder/httpdocs
-
-    civi_name=$( cv ev 'return CRM_Utils_System::version();' );
-
-    cd sites/all/modules/
-
-    if [[ `wget -S --spider https://download.civicrm.org/civicrm-$civi_version-drupal.tar.gz  2>&1 | grep 'HTTP/1.1 200 OK'` ]]
+    if [[ "$civicrm_version" = "Wordpress" ]]
     then
-        #functions updateCivirm
-        #echo "test"
-        updateCivicrm civi_language
+        #echo "Wordpress"
+        #functions updateCivicrmWordpress
+        updateCivicrmWordpress civi_folder civi_version civi_language
+    elif [[ "$civicrm_version" = "Drupal" ]]
+    then
+        #echo "Drupal"
+        #functions updateCivicrmDrupal 
+        updateCivicrmDrupal civi_folder civi_version civi_language 
     else
         echo -e '\e[93m=======================================\033[0m'
-        echo -e '\e[93m\033[31m Aucune version de Civicrm trouvé\033[31m'
+        echo -e '\e[93m\033[31m Aucun CMS valide sélectionné \033[31m'
         echo -e '\e[93m=======================================\033[0m'
         exit 1
     fi
